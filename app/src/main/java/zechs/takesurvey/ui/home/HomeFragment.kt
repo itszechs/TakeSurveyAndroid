@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import zechs.takesurvey.R
 import zechs.takesurvey.databinding.FragmentHomeBinding
+import zechs.takesurvey.utils.ext.navigateSafe
 
 class HomeFragment : Fragment() {
 
@@ -30,6 +33,20 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
+        binding.apply {
+            btnCreate.setOnClickListener {
+                findNavController().navigateSafe(R.id.action_homeFragment_to_createFragment)
+            }
+            btnAttempt.setOnClickListener {
+                findNavController().navigateSafe(R.id.action_homeFragment_to_attemptFragment)
+            }
+            btnResult.setOnClickListener {
+                findNavController().navigateSafe(R.id.action_homeFragment_to_resultFragment)
+            }
+        }
+
     }
+
 
 }

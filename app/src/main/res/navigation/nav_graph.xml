@@ -9,5 +9,34 @@
         android:id="@+id/homeFragment"
         android:name="zechs.takesurvey.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_createFragment"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_attemptFragment"
+            app:destination="@id/attemptFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="zechs.takesurvey.ui.create.CreateFragment"
+        android:label="fragment_create"
+        tools:layout="@layout/fragment_create" />
+
+    <fragment
+        android:id="@+id/attemptFragment"
+        android:name="zechs.takesurvey.ui.attempt.AttemptFragment"
+        android:label="fragment_attempt"
+        tools:layout="@layout/fragment_attempt" />
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="zechs.takesurvey.ui.result.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" />
+
 </navigation>

@@ -1,19 +1,19 @@
-package zechs.takesurvey.ui.results
+package zechs.takesurvey.ui.result
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import zechs.takesurvey.databinding.FragmentResultsBinding
+import zechs.takesurvey.databinding.FragmentResultBinding
 
-class ResultsFragment : Fragment() {
+class ResultFragment : Fragment() {
 
     companion object {
-        const val TAG = "ResultsFragment"
+        const val TAG = "ResultFragment"
     }
 
-    private var _binding: FragmentResultsBinding? = null
+    private var _binding: FragmentResultBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -21,7 +21,7 @@ class ResultsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentResultsBinding.inflate(
+        _binding = FragmentResultBinding.inflate(
             inflater, container, /* attachToParent */ false
         )
         return binding.root
@@ -29,7 +29,7 @@ class ResultsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentResultsBinding.bind(view)
+        _binding = FragmentResultBinding.bind(view)
     }
 
 }
