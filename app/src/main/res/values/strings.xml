@@ -3,4 +3,8 @@
     <string name="create">Create</string>
     <string name="result">Result</string>
     <string name="attempt">Attempt</string>
+    <string name="enter_survey_link">Enter survey link</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="invalid_link">Invalid link</string>
 </resources>

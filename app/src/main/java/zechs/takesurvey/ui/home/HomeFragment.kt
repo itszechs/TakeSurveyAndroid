@@ -1,14 +1,20 @@
 package zechs.takesurvey.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import zechs.takesurvey.R
 import zechs.takesurvey.databinding.FragmentHomeBinding
+import zechs.takesurvey.utils.ext.addInput
+import zechs.takesurvey.utils.ext.inputText
 import zechs.takesurvey.utils.ext.navigateSafe
+import zechs.takesurvey.utils.extractIdFromUrl
 
 class HomeFragment : Fragment() {
 
@@ -39,13 +45,39 @@ class HomeFragment : Fragment() {
                 findNavController().navigateSafe(R.id.action_homeFragment_to_createFragment)
             }
             btnAttempt.setOnClickListener {
-                findNavController().navigateSafe(R.id.action_homeFragment_to_attemptFragment)
+                setupAttemptButton()
             }
             btnResult.setOnClickListener {
                 findNavController().navigateSafe(R.id.action_homeFragment_to_resultFragment)
             }
         }
 
+    }
+
+    private fun setupAttemptButton() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.enter_survey_link)
+            .setPositiveButton(getString(R.string.submit)) { dialog, _ ->
+                Log.d(
+                    TAG, "setupAttemptButton: Input(" + dialog.inputText(
+                        textInputLayout = R.id.dialog_text_input_layout
+                    ) + ")"
+                )
+                extractIdFromUrl(
+                    dialog.inputText(textInputLayout = R.id.dialog_text_input_layout)
+                )?.let { pollId ->
+                    val action = HomeFragmentDirections.actionHomeFragmentToAttemptFragment(pollId)
+                    findNavController().navigateSafe(action)
+                } ?: run {
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.invalid_link),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }.setNegativeButton(getString(R.string.cancel), null)
+            .addInput(hint = R.string.enter_survey_link)
+            .show()
     }
 
 
