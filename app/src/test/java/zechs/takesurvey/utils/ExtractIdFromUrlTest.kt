@@ -29,16 +29,18 @@ internal class ExtractIdFromUrlTest {
     }
 
     @Test
-    fun `returns null for an URL with a different path`() {
+    fun `extracts the ID from a valid URL without results`() {
         val url = "https://takesurvey.vercel.app/63d6cbd5651e8c29710f29a3"
+        val expectedId = "63d6cbd5651e8c29710f29a3"
         val extractedId = extractIdFromUrl(url)
-        Assert.assertNull(extractedId)
+        Assert.assertEquals(expectedId, extractedId)
     }
 
     @Test
-    fun `returns null for an URL with a different scheme`() {
+    fun `extracts the ID from an URL with a different scheme`() {
         val url = "http://takesurvey.vercel.app/63d6cbd5651e8c29710f29a3/results"
+        val expectedId = "63d6cbd5651e8c29710f29a3"
         val extractedId = extractIdFromUrl(url)
-        Assert.assertNull(extractedId)
+        Assert.assertEquals(expectedId, extractedId)
     }
 }
