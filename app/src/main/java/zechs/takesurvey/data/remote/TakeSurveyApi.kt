@@ -1,10 +1,7 @@
 package zechs.takesurvey.data.remote
 
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PATCH
-import retrofit2.http.POST
+import retrofit2.http.*
 import zechs.takesurvey.data.models.*
 
 interface TakeSurveyApi {
@@ -14,9 +11,9 @@ interface TakeSurveyApi {
         @Body pollRequest: PollRequest
     ): Response<CreateResponse>
 
-    @GET("/api/v1/poll/:pollId")
+    @GET("/api/v1/poll/{pollId}")
     suspend fun getPoll(
-        pollId: String
+        @Path("pollId") pollId: String
     ): Response<PollResponse>
 
     @PATCH("/api/v1/poll/:pollId")
