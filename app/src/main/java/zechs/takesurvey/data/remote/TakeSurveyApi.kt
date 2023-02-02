@@ -16,9 +16,9 @@ interface TakeSurveyApi {
         @Path("pollId") pollId: String
     ): Response<PollResponse>
 
-    @PATCH("/api/v1/poll/:pollId")
+    @PATCH("/api/v1/poll/{pollId}")
     suspend fun votePoll(
-        pollId: String,
+        @Path("pollId") pollId: String,
         @Body voteRequest: VoteRequest
     ): Response<MessageResponse>
 
