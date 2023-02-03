@@ -28,7 +28,9 @@
         tools:layout="@layout/fragment_create" >
         <action
             android:id="@+id/action_createFragment_to_attemptFragment"
-            app:destination="@id/attemptFragment" />
+            app:destination="@id/attemptFragment"
+            app:popUpTo="@id/createFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -41,7 +43,9 @@
             app:argType="string" />
         <action
             android:id="@+id/action_attemptFragment_to_resultFragment"
-            app:destination="@id/resultFragment" />
+            app:destination="@id/resultFragment"
+            app:popUpTo="@id/attemptFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
