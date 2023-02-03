@@ -7,16 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionManager
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.transition.MaterialSharedAxis
+import dagger.hilt.android.AndroidEntryPoint
+import zechs.takesurvey.R
 import zechs.takesurvey.data.models.PollResponse
 import zechs.takesurvey.databinding.FragmentAttemptBinding
+import zechs.takesurvey.utils.ext.navigateSafe
 import zechs.takesurvey.utils.showSnackBar
 
-
+@AndroidEntryPoint
 class AttemptFragment : Fragment() {
 
     companion object {
@@ -27,7 +31,9 @@ class AttemptFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args by navArgs<AttemptFragmentArgs>()
-    private val viewModel by activityViewModels<AttemptViewModel>()
+    private val viewModel by lazy {
+        ViewModelProvider(this)[AttemptViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +55,7 @@ class AttemptFragment : Fragment() {
 
         setupSurveyObserver()
         setupSubmitButton()
+        setupAttemptObserver()
         viewModel.fetchSurvey(pollId)
     }
 
@@ -77,7 +84,7 @@ class AttemptFragment : Fragment() {
     private fun isLoading(loading: Boolean) {
         TransitionManager.beginDelayedTransition(
             binding.root,
-            MaterialSharedAxis(MaterialSharedAxis.Y, true)
+            MaterialSharedAxis(MaterialSharedAxis.Y, !loading)
         )
         binding.apply {
             progressBar.visibility = if (loading) View.VISIBLE else View.GONE
@@ -102,10 +109,51 @@ class AttemptFragment : Fragment() {
     private fun setupSubmitButton() {
         binding.btnSubmit.setOnClickListener {
             val selectedOption = binding.radioGroup.checkedRadioButtonId
-            val checkedRadioButton = binding.radioGroup.findViewById<RadioButton>(selectedOption)
-            val option = checkedRadioButton.text.toString()
-            Log.d(TAG, "Selected option: ${option}")
+            val checkedRadioButton = binding.radioGroup.findViewById<RadioButton?>(selectedOption)
+            checkedRadioButton?.let {
+                val option = checkedRadioButton.text.toString()
+                viewModel.attemptSurvey(
+                    pollId = args.pollId,
+                    pollOption = option
+                )
+            } ?: run {
+                showSnackBar(
+                    root = binding.root,
+                    message = getString(R.string.please_select_option)
+                )
+            }
         }
     }
+
+    private fun setupAttemptObserver() {
+        viewModel.attemptState.observe(viewLifecycleOwner) { attemptState ->
+            Log.d(TAG, "attemptState($attemptState)")
+            when (attemptState) {
+                AttemptSurveyUiState.Attempting -> {
+                    isLoading(true)
+                }
+                is AttemptSurveyUiState.AttemptedStatus -> {
+                    showSnackBar(
+                        binding.root,
+                        message = attemptState.message
+                    )
+                    isLoading(false)
+                    val action = AttemptFragmentDirections.actionAttemptFragmentToResultFragment(
+                        pollId = args.pollId
+                    )
+                    findNavController().navigateSafe(action)
+                }
+                is AttemptSurveyUiState.Error -> {
+                    showSnackBar(
+                        binding.root,
+                        message = attemptState.message
+                    )
+                    isLoading(false)
+                }
+            }
+
+        }
+    }
+
 
 }

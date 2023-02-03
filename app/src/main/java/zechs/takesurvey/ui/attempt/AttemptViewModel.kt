@@ -18,8 +18,37 @@ class AttemptViewModel @Inject constructor(
     private val takeSurveyRepository: TakeSurveyRepository
 ) : ViewModel() {
 
+    private val _attemptState = MutableLiveData<AttemptSurveyUiState>()
+    val attemptState: LiveData<AttemptSurveyUiState> = _attemptState
+
     private val _fetchState = MutableLiveData<FetchSurveyUiState>()
     val fetchState: LiveData<FetchSurveyUiState> = _fetchState
+
+    fun attemptSurvey(
+        pollId: String,
+        pollOption: String
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        _attemptState.postValue(AttemptSurveyUiState.Attempting)
+        try {
+            takeSurveyRepository.votePoll(pollId, pollOption).let { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _attemptState.postValue(AttemptSurveyUiState.AttemptedStatus(it.message))
+                    } ?: {
+                        _attemptState.postValue(AttemptSurveyUiState.Error("Unknown error"))
+                    }
+                } else {
+                    _attemptState.postValue(AttemptSurveyUiState.Error(response.message()))
+                }
+            }
+        } catch (e: Exception) {
+            _attemptState.postValue(
+                AttemptSurveyUiState.Error(
+                    e.message ?: "Something went wrong!"
+                )
+            )
+        }
+    }
 
     fun fetchSurvey(
         pollId: String
@@ -53,4 +82,10 @@ sealed class FetchSurveyUiState {
     object Fetching : FetchSurveyUiState()
     data class FetchedSurvey(val survey: PollResponse) : FetchSurveyUiState()
     data class Error(val message: String) : FetchSurveyUiState()
+}
+
+sealed class AttemptSurveyUiState {
+    object Attempting : AttemptSurveyUiState()
+    data class AttemptedStatus(val message: String) : AttemptSurveyUiState()
+    data class Error(val message: String) : AttemptSurveyUiState()
 }
