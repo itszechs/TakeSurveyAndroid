@@ -25,7 +25,11 @@
         android:id="@+id/createFragment"
         android:name="zechs.takesurvey.ui.create.CreateFragment"
         android:label="Create"
-        tools:layout="@layout/fragment_create" />
+        tools:layout="@layout/fragment_create" >
+        <action
+            android:id="@+id/action_createFragment_to_attemptFragment"
+            app:destination="@id/attemptFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/attemptFragment"
@@ -35,12 +39,19 @@
         <argument
             android:name="pollId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_attemptFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/resultFragment"
         android:name="zechs.takesurvey.ui.result.ResultFragment"
         android:label="Result"
-        tools:layout="@layout/fragment_result" />
+        tools:layout="@layout/fragment_result" >
+        <argument
+            android:name="pollId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>
