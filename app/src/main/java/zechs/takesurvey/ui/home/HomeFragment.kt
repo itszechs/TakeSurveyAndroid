@@ -45,16 +45,18 @@ class HomeFragment : Fragment() {
                 findNavController().navigateSafe(R.id.action_homeFragment_to_createFragment)
             }
             btnAttempt.setOnClickListener {
-                setupAttemptButton()
+                setupSurveyButton(NavigateTo.Attempt)
             }
             btnResult.setOnClickListener {
-                findNavController().navigateSafe(R.id.action_homeFragment_to_resultFragment)
+                setupSurveyButton(NavigateTo.Result)
             }
         }
 
     }
 
-    private fun setupAttemptButton() {
+    private fun setupSurveyButton(
+        navigateTo: NavigateTo
+    ) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.enter_survey_link)
             .setPositiveButton(getString(R.string.submit)) { dialog, _ ->
@@ -66,7 +68,14 @@ class HomeFragment : Fragment() {
                 extractIdFromUrl(
                     dialog.inputText(textInputLayout = R.id.dialog_text_input_layout)
                 )?.let { pollId ->
-                    val action = HomeFragmentDirections.actionHomeFragmentToAttemptFragment(pollId)
+                    val action = when (navigateTo) {
+                        NavigateTo.Attempt -> {
+                            HomeFragmentDirections.actionHomeFragmentToAttemptFragment(pollId)
+                        }
+                        NavigateTo.Result -> {
+                            HomeFragmentDirections.actionHomeFragmentToResultFragment(pollId)
+                        }
+                    }
                     findNavController().navigateSafe(action)
                 } ?: run {
                     Snackbar.make(
@@ -80,5 +89,9 @@ class HomeFragment : Fragment() {
             .show()
     }
 
+    sealed interface NavigateTo {
+        object Attempt : NavigateTo
+        object Result : NavigateTo
+    }
 
 }
