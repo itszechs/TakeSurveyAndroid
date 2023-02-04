@@ -8,5 +8,10 @@
     <string name="cancel">Cancel</string>
     <string name="invalid_link">Invalid link</string>
     <string name="please_select_option">Please select an option</string>
+    <string name="create_a_new_survey">Create a new survey</string>
+    <string name="type_your_question_here">Type your question here…</string>
+    <string name="question">Question</string>
+    <string name="options">Options</string>
     <string name="delete">Delete</string>
+    <string name="add_option">Add option</string>
 </resources>
