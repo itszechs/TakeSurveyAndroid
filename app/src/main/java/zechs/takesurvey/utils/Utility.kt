@@ -1,11 +1,9 @@
 package zechs.takesurvey.utils
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.Keep
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
-import zechs.takesurvey.ui.attempt.AttemptFragment
 import zechs.takesurvey.utils.Constants.Companion.TAKESURVEY
 import java.net.URL
 
@@ -28,8 +26,6 @@ internal fun showSnackBar(
     duration: Int = Snackbar.LENGTH_SHORT,
     action: SnackBarAction? = null
 ) {
-    Log.i(AttemptFragment.TAG, "Showing snackbar: $message")
-
     Snackbar.make(
         root,
         message,
